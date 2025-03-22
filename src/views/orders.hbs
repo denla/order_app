@@ -1,0 +1,88 @@
+<div class="alert alert-success" role="alert">
+  {{#if session.userId}}
+    {{#if (eq session.userRole "waiter")}}
+        Work harder, {{session.userName}}!
+        <div class="buttons-container"><a href="/orders" class="btn btn-primary">Create order</a><a href="/logout" class="btn btn-primary">Logout</a></div>
+    {{/if}}
+    {{#if (eq session.userRole "admin")}}
+        Welcome, admin!
+        <div class="buttons-container"><a href="/logout" class="btn btn-primary">Logout</a></div>
+    {{/if}}
+    {{#if (not (eq session.userRole "waiter"))}}
+      {{#if (not (eq session.userRole "admin"))}}
+        Account error. Please logout.
+        <div class="buttons-container"><a href="/logout" class="btn btn-primary">Logout</a></div>
+      {{/if}}
+    {{/if}}
+  {{else}}
+      You're not logged in <div class="buttons-container"><a href="/login" class="btn btn-primary">Login</a></div>
+  {{/if}}
+</div>
+
+  <h1 style="padding: 30px">All orders</h1>
+  {{#if session.userId}}
+
+  {{#if (eq session.userRole "waiter")}}
+  <ul>
+    <div class="row row-cols-2 row-cols-md-4 g-2">
+      {{#each items}}
+        {{#if (eq this.dataValues.id ../session.userId)}}
+        <div class="col">
+          <div class="card" style="flex-basis: 18rem; height: 100%; opacity: {{#if this.dataValues.isActive}}1{{else}}0.5{{/if}}">
+            <div class="card-body order-body">
+              <div style="display: flex; gap: 10px">
+                <h5 class="card-title">Order #{{this.dataValues.id}}</h5>
+                <p class="text-secondary" style="margin-bottom: 0;"> {{this.Waiter.dataValues.name}}</p>
+              </div>
+
+              <li class="list-group-item">
+                  {{#each MenuItems}}
+                    {{this.dataValues.title}}{{#unless @last}},{{/unless}}
+                  {{/each}}
+                </li>
+              <a href="/orders/{{this.dataValues.id}}" class="btn btn-primary">See more</a>
+            </div>
+            <ul class="list-group list-group-flush">
+              
+                <li class="list-group-item">{{orderDate this.dataValues.createdAt}}</li>
+            </ul>
+          </div>
+        </div>
+        {{/if}}
+      {{/each}} 
+    </div>
+  </ul>
+
+{{else}}
+ <ul>
+    <div class="row row-cols-2 row-cols-md-4 g-2">
+      {{#each items}}
+        <div class="col">
+          <div class="card" style="flex-basis: 18rem; height: 100%; opacity: {{#if this.dataValues.isActive}}1{{else}}0.5{{/if}}">
+            <div class="card-body order-body">
+              <div style="display: flex; gap: 10px">
+                <h5 class="card-title">Order #{{this.dataValues.id}}</h5>
+                <p class="text-secondary" style="margin-bottom: 0;"> {{this.Waiter.dataValues.name}}</p>
+              </div>
+
+              <li class="list-group-item">
+                  {{#each MenuItems}}
+                    {{this.dataValues.title}}{{#unless @last}},{{/unless}}
+                  {{/each}}
+                </li>
+              <a href="/orders/{{this.dataValues.id}}" class="btn btn-primary">See more</a>
+            </div>
+            <ul class="list-group list-group-flush">
+              
+                <li class="list-group-item">{{orderDate this.dataValues.createdAt}}</li>
+            </ul>
+          </div>
+        </div>
+      {{/each}} 
+    </div>
+  </ul>
+
+{{/if}}
+{{else}}
+<p style="padding: 30px;">You're not logged in</p>
+{{/if}}

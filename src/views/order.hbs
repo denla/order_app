@@ -1,0 +1,48 @@
+<a href="/" class="btn btn-primary" style="margin: 0px 30px">Back</a>
+
+<div>
+  <br>
+  <h1 style="padding: 10px 30px">Информация о заказе #{{order.dataValues.id}}</h1>
+  <p class="text-secondary" style="padding: 0px 30px">{{orderDate order.dataValues.createdAt}}</p>
+
+  <h2 style="padding: 20px 30px">Позиции заказа:</h2>
+
+   <ul>
+    <div class="row row-cols-2 row-cols-md-4 g-2">
+    {{#each menuItems}}
+    <div class="col">
+      <div class="card" style="flex-basis: 18rem; height: 100%">
+        <div class="img-container">
+          <img src={{this.dataValues.picture}} class="card-img-top" alt={{this.dataValues.title}} style="aspect-ratio: 1/1;">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{this.dataValues.title}}</h5>
+          <p class="card-text">{{this.dataValues.description}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">{{this.dataValues.cost}} ₽ </li>
+        </ul>
+      </div>
+    </div>
+    {{/each}}
+
+    </div>
+  </ul>
+
+
+  <h3 style="padding: 20px 30px">Итого: {{sumCost menuItems}} ₽</h3>
+  {{#if order.dataValues.isActive}}
+    <a href="#" class="btn btn-danger" style="margin: 0px 30px" onclick="deleteOrder({{order.dataValues.id}})">Закрыть заказ</a>
+  {{/if}}
+</div>
+
+<script>
+  function deleteOrder(id) {
+    fetch(`/orders/${id}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+  }
+</script>
+
+

@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-4 card login-card">
+      {{#if session.userId}}
+        {{#if (eq session.userRole "admin")}} 
+        <h2>You can't create order</h2>
+        {{else}}
+          <h2>Create order</h2>
+          <form id="order-form">
+            <div class="form-group">
+              <label for="waiter">Choose Waiter:</label>
+              <select class="form-control" id="waiter">
+                <option value="">Select Waiter</option>
+                {{#each users}}
+                  <option value="{{this.dataValues.id}}">{{this.dataValues.name}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Menu Items:</label>
+                {{#each MenuItems}}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="{{this.dataValues.id}}">{{this.dataValues.title}}({{this.dataValues.cost}} ₽ )
+                    </label>
+                </div>
+                {{/each}}
+            </div>
+            <button type="submit" class="btn btn-primary">Create Order</button>
+          </form>
+        </div>
+        {{/if}}
+      {{/if}}
+  </div>
+</div>
+
+<script>
+  document.getElementById('order-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const waiter = document.getElementById('waiter').value;
+    const items = [];
+    const checkboxes = document.querySelectorAll('#order-form input[type="checkbox"]:checked');
+
+    checkboxes.forEach((checkbox) => {
+        items.push(checkbox.value);
+    });
+
+    const data = {
+        waiter,
+        items,
+    };
+    console.log(data);
+
+    if(waiter && items) {
+        fetch('/orders', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+    };
+    });
+</script>
+

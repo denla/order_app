@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "s21_restaurant",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
